@@ -1,3 +1,3 @@
 export enum FigureEnum {
-  Pawn = "pawn",
+  Pawn = "&#9823;",
 }

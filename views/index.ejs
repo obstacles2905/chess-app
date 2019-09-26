@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Chess</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -12,15 +13,53 @@
 
         <div id="game-view-squares">
             <%  for(let i=0; i<chessboardData.length; i++) { %>
-                <div class="game-view-square">
-                    <%= chessboardData[i].x %>,
-                    <%= chessboardData[i].y %>
+                <div
+                    class="game-view-square"
+                    id="<%= chessboardData[i].cellState%>"
+                    data-x="<%= chessboardData[i].x%>"
+                    data-y="<%= chessboardData[i].y%>"
+                    onclick="moveFigure(event)"
+                >
+                    <%- chessboardData[i].figure %>
                 </div>
             <% } %>
         </div>
     </div>
 
 </body>
+
+<script>
+    function moveFigure(event) {
+        const clickedFigureCoordinates = getClickedCellCoordinates(event);
+        const potentialCellsCoordinates = getPotentialCellsCoordinates(event, clickedFigureCoordinates);
+
+        const potentialCellsData = document.querySelectorAll(
+          `[data-x='${potentialCellsCoordinates.x}'][data-y='${potentialCellsCoordinates.y}']`
+        );
+
+        if (potentialCellsData.length !== 0 &&
+          potentialCellsData[0].attributes.id.nodeValue !== "filled") {
+            /*
+            1. заменить айди изначальной клетки на empty
+            2. заменить айди ожидаемой клетки на filled
+            3. очистить символьное значение пешки в изначальной клетке
+            4. добавить значение пешки в ожидаемую клетку
+             */
+        }
+    }
+
+    function getClickedCellCoordinates(event) {
+      const x = Number.parseInt(event.target.getAttribute("data-x"));
+      const y = Number.parseInt(event.target.getAttribute("data-y"));
+
+      return {x, y};
+    }
+
+    function getPotentialCellsCoordinates(event, clickedFigureCoordinates) {
+      return {x: clickedFigureCoordinates.x + 1, y: clickedFigureCoordinates.y};
+    }
+
+</script>
 
 <style>
     #game-view {
