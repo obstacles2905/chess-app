@@ -6,60 +6,80 @@
     <title>Chess</title>
 </head>
 
-<body>
-    <div id="game-view">
-        <div id="game-view-info"></div>
-
-        <div id="game-view-squares">
-            <%  for(let i=0; i<chessboardData.length; i++) { %>
-                <div class="game-view-square">
-                    <%= chessboardData[i].x %>,
-                    <%= chessboardData[i].y %>
-                </div>
-            <% } %>
-        </div>
-    </div>
-
+<body onload="launchChessboardInstance()">
+    <div id="chess-info"></div>
+    <canvas id="chess-board" onclick="showCoordinates(event)"></canvas>
 </body>
 
 <style>
-    #game-view {
-        width: 500px;
-        margin: 0 auto;
-        border: 1px solid #000;
+    body {
+        background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%)
     }
 
-    #game-view-info {
-        padding: 15px;
-        font-family: sans-serif;
-        font-size: 20px;
-        font-weight: bold;
+    main {
+        max-width: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         text-align: center;
-        background-color: #eee;
     }
 
-    #game-view-squares {
-        height: 500px;
-        display: flex;
-        flex-wrap: wrap;
-        padding: 25px;
-        box-sizing: border-box;
+    canvas {
+        border-radius: 0.5em;
     }
-
-    .game-view-square {
-        width: 12.5%;
-        height: 12.5%;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-sizing: border-box;
-
-        font-size: 12px;
-        border-style: solid;
-    }
-
 
 </style>
+
+<script>
+  class ChessBoard {
+    constructor(config) {
+      this.options = {
+        selector: document.querySelector("#chess-board"),
+        width: 400,
+        height: 400,
+        size: 8,
+        light: '#d1eefc',
+        dark: '#1f1f21'
+      };
+      if (config) Object.assign(this.options, this.options, config);
+      this.draw();
+    }
+
+    draw() {
+      let element = this.options.selector;
+      let context = element.getContext("2d");
+      let squareWidth = this.options.width / this.options.size;
+      let totalSquares = Math.pow(this.options.size, 2);
+      let i, x, y = -1;
+
+      element.width = this.options.width;
+      element.height = this.options.height;
+
+      for (i = 0; i < totalSquares; i++) {
+        x++;
+        if (i % this.options.size === 0) {
+          y++;
+          x = 0;
+        }
+
+        context.beginPath();
+        context.rect(x * squareWidth, y * squareWidth, squareWidth, squareWidth);
+        context.fillStyle = (x + y) % 2 ? this.options.dark : this.options.light;
+        context.fill();
+      }
+    }
+  }
+
+  function launchChessboardInstance() {
+    return new ChessBoard();
+  }
+
+  function showCoordinates(event) {
+    const x = event.clientX
+    const y = event.clientY
+    console.log("x: " + x + " y: " + y)
+  }
+</script>
 
 </html>

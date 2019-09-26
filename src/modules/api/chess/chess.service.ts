@@ -1,12 +1,12 @@
 import { TransformPlainToClass } from "class-transformer";
 import { MakeStepDTO } from "./dtos/make-step.dto";
 import { CellDTO } from "./dtos/cell.dto";
+import { FigureEnum } from "./figure.enum";
 
 const CHESSBOARD_HEIGHT = 8;
 const CHESSBOARD_WIDTH = 8;
-const WHITE_FIGURES_AMOUNT = 16;
-const BLACK_FIGURE_AMOUNT = 16;
-const PAWN_HTML_CODE = "&#9823;";
+const WHITE_FIGURES_ROWS = 2;
+const BLACK_FIGURES_ROWS = 7;
 
 export class ChessService {
 
@@ -15,7 +15,11 @@ export class ChessService {
 
     for (let width = 1; width <= CHESSBOARD_WIDTH; width++) {
       for (let height = 1; height <= CHESSBOARD_HEIGHT; height++) {
-        chessboardData.push({ x: width, y: height});
+        if (width <= WHITE_FIGURES_ROWS || width >= BLACK_FIGURES_ROWS) {
+          chessboardData.push({ x: width, y: height, figure: FigureEnum.Pawn});
+        } else {
+          chessboardData.push({ x: width, y: height});
+        }
       }
     }
 
